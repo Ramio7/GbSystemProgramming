@@ -61,3 +61,11 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+
+GbSystemProgramming/Library/
+
+GbSystemProgramming/Logs/
+
+GbSystemProgramming/UserSettings/
+
+GbSystemProgramming/.vsconfig
