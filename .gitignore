@@ -69,3 +69,7 @@ GbSystemProgramming/Logs/
 GbSystemProgramming/UserSettings/
 
 GbSystemProgramming/.vsconfig
+
+GbSystemProgramming/obj/
+
+GbSystemProgramming/Temp/
