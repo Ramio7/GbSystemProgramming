@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -17,26 +15,32 @@ public class AsyncAwait : MonoBehaviour
     private void Start()
     {
         Debug.Log("Tasks started");
-        Task.Run(() => { var task1 = Task1(cancellationTokenSourceForTask1.Token); });
-        Task.Run(() => { var task2 = Task2(cancellationTokenSourceForTask2.Token); });
+
+        Task.Run(() => { var task1 = Task1(_task1Duration, cancellationTokenSourceForTask1.Token); });
+        Task.Run(() => { var task2 = Task2(_task2Duration, cancellationTokenSourceForTask2.Token); });
     }
 
-    private async Task Task1(CancellationToken cancellationToken)
+    private void OnApplicationQuit()
     {
-        await Task.Delay(_task1Duration, cancellationToken);
+        cancellationTokenSourceForTask1?.Dispose();
+        cancellationTokenSourceForTask2?.Dispose();
+    }
+
+    private async Task Task1(int taskDuration, CancellationToken cancellationToken)
+    {
+        await Task.Delay(taskDuration, cancellationToken);
         Debug.Log("Task1 completed");
     }
     
-    private async Task Task2(CancellationToken cancellationToken)
+    private Task Task2(int taskDuration, CancellationToken cancellationToken)
     {
-        var frameAwaiter = Task.Run(() => { TargetFrameCountReached(Time.frameCount); }, cancellationToken);
-        await frameAwaiter;
+        for (int i = 0; i < taskDuration; i++)
+        {
+            if (cancellationToken.IsCancellationRequested) return Task.FromResult(false);
+            Debug.Log($"{i + 1} frames passed");
+            Task.Yield();
+        }
         Debug.Log("Task2 completed");
-    }
-
-    private IEnumerator TargetFrameCountReached(int startingFrame)
-    {
-        while (Time.frameCount - startingFrame <= _task2Duration) yield return null;
-        yield break;
+        return Task.FromResult(true);
     }
 }
