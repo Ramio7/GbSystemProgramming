@@ -152,6 +152,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f93d7fbb1646d744987b2801be3c7baa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _positions:
+  - {x: 20, y: 10, z: 0}
+  - {x: 3, y: -6, z: 15}
+  - {x: 17, y: 54, z: -6}
+  _velocities:
+  - {x: 4, y: 2, z: 9}
+  - {x: 1, y: 90, z: -7}
+  - {x: -19, y: -55, z: 9}
+  _finalPositions: []
 --- !u!4 &236975422
 Transform:
   m_ObjectHideFlags: 0

@@ -14,28 +14,57 @@ public class Unit2 : MonoBehaviour
     private void Start()
     {
         ThreadPool.GetMaxThreads(out int workerThreads, out int completionPortThreads);
-        if (_positions.Count == _velocities.Count) throw new Exception("Make same count of positions and velocities");
+        if (_positions.Count != _velocities.Count) throw new Exception("Make same count of positions and velocities");
 
-        NativeArray<Vector3> _positionsContainer = new(_positions.Count, Allocator.Persistent);
-        NativeArray<Vector3> _velocitiesContainer = new(_velocities.Count, Allocator.Persistent);
+        NativeArray<Vector3> positionsContainer, velocitiesContainer, finalPositionsContainer;
 
-        _positionsContainer.CopyFrom(_positions.ToArray());
-        _velocitiesContainer.CopyFrom(_velocities.ToArray());
+        InitJobContainers(out positionsContainer, out velocitiesContainer, out finalPositionsContainer);
+        InitJob(workerThreads, positionsContainer, velocitiesContainer, finalPositionsContainer);
+        ConvertJobResultToList(finalPositionsContainer);
+        ResultOutput();
+        DisposeJobContainers(positionsContainer, velocitiesContainer, finalPositionsContainer);
+    }
 
-        NativeArray<Vector3> _finalPositionsContainer = new(_positionsContainer.Length, Allocator.Persistent);
+    private void InitJobContainers(out NativeArray<Vector3> positionsContainer, out NativeArray<Vector3> velocitiesContainer, out NativeArray<Vector3> finalPositionsContainer)
+    {
+        positionsContainer = new(_positions.Count, Allocator.Persistent);
+        velocitiesContainer = new(_velocities.Count, Allocator.Persistent);
+        positionsContainer.CopyFrom(_positions.ToArray());
+        velocitiesContainer.CopyFrom(_velocities.ToArray());
 
+        finalPositionsContainer = new(positionsContainer.Length, Allocator.Persistent);
+    }
+
+    private void InitJob(int workerThreads, NativeArray<Vector3> positionsContainer, NativeArray<Vector3> velocitiesContainer, NativeArray<Vector3> finalPositionsContainer)
+    {
         var job = new SimpleMover
         {
-            m_positions = _positionsContainer,
-            m_velocities = _velocitiesContainer,
-            m_finalPositions = _finalPositionsContainer
+            m_positions = positionsContainer,
+            m_velocities = velocitiesContainer,
+            m_finalPositions = finalPositionsContainer
         };
-        var jobHandle = job.Schedule(_positionsContainer.Length, _positionsContainer.Length / workerThreads);
+        var jobHandle = job.Schedule(positionsContainer.Length, positionsContainer.Length / workerThreads);
+        jobHandle.Complete();
+    }
 
-        _finalPositionsContainer.CopyTo(_finalPositions.ToArray());
+    private void ConvertJobResultToList(NativeArray<Vector3> resultContainer)
+    {
+        var tempArray = new Vector3[resultContainer.Length];
+        resultContainer.CopyTo(tempArray);
+        foreach (var position in tempArray) _finalPositions.Add(position);
+    }
 
-        _positionsContainer.Dispose();
-        _velocitiesContainer.Dispose();
-        _finalPositionsContainer.Dispose();
+    private void ResultOutput()
+    {
+        string tempString = "Final positions:\n";
+        for (int i = 0; i < _finalPositions.Count; i++) tempString += $"{i + 1}. {_finalPositions[i]} ";
+        Debug.Log($"{tempString}");
+    }
+
+    private void DisposeJobContainers(NativeArray<Vector3> positionsContainer, NativeArray<Vector3> velocitiesContainer, NativeArray<Vector3> finalPositionsContainer)
+    {
+        positionsContainer.Dispose();
+        velocitiesContainer.Dispose();
+        finalPositionsContainer.Dispose();
     }
 }
