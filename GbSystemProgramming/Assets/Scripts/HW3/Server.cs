@@ -5,20 +5,21 @@ using UnityEngine.Networking;
 
 public class Server : MonoBehaviour
 {
+    private readonly int _port = 5805;
     private const int MaxConnections = 10;
-    private int _port = 5805;
     private int _hostID;
     private int _reliableChannel;
     private bool _isStarted = false;
     private byte _error;
     List<int> _connectionIDs = new();
+    Dictionary<int, string> _users = new();
 
     public void StartServer()
     {
         NetworkTransport.Init();
-        ConnectionConfig cc = new ConnectionConfig();
+        ConnectionConfig cc = new();
         _reliableChannel = cc.AddChannel(QosType.Reliable);
-        HostTopology topology = new HostTopology(cc, MaxConnections);
+        HostTopology topology = new(cc, MaxConnections);
         _hostID = NetworkTransport.AddHost(topology, _port);
         _isStarted = true;
     }
@@ -52,18 +53,23 @@ public class Server : MonoBehaviour
                     break;
                 case NetworkEventType.ConnectEvent:
                     _connectionIDs.Add(connectionId);
-                    SendMessageToAll($"Player {connectionId} has connected.");
-                    Debug.Log($"Player {connectionId} has connected.");
+                    _users.Add(connectionId, string.Empty);
+                    SendMessageToAll($"{_users[connectionId]} has connected.");
+                    Debug.Log($"{_users[connectionId]} has connected.");
                     break;
                 case NetworkEventType.DataEvent:
                     string message = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
-                    SendMessageToAll($"Player {connectionId}: {message}");
-                    Debug.Log($"Player {connectionId}: {message}");
+
+                    if (_users[connectionId] == string.Empty) _users[connectionId] = message;
+                    else SendMessageToAll($"{_users[connectionId]}: {message}");
+
+                    Debug.Log($"{_users[connectionId]}: {message}");
                     break;
                 case NetworkEventType.DisconnectEvent:
+                    SendMessageToAll($"{_users[connectionId]} has disconnected.");
+                    Debug.Log($"{_users[connectionId]} has disconnected.");
                     _connectionIDs.Remove(connectionId);
-                    SendMessageToAll($"Player {connectionId} has disconnected.");
-                    Debug.Log($"Player {connectionId} has disconnected.");
+                    _users.Remove(connectionId);
                     break;
                 case NetworkEventType.BroadcastEvent:
                     break;
@@ -83,7 +89,7 @@ public class Server : MonoBehaviour
 
     public void SendMessage(string message, int connectionID)
     {
-        byte[] buffer = Encoding.Unicode.GetBytes(message);
+        byte[] buffer = Encoding.Unicode.GetBytes($"{message}");
         NetworkTransport.Send(_hostID, connectionID, _reliableChannel, buffer, message.Length *
         sizeof(char), out _error);
         if ((NetworkError)_error != NetworkError.Ok) Debug.Log((NetworkError)_error);

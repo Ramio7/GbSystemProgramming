@@ -1,31 +1,36 @@
+using System;
 using System.Text;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class Client : MonoBehaviour
 {
+    private readonly int _port = 0;
+    private readonly int _serverPort = 5805;
     private const int MaxConnections = 10;
-    private int _port = 0;
-    private int _serverPort = 5805;
+    [SerializeField] private TMP_InputField _username;
     private int _hostID;
     private int _reliableChannel;
     private int _connectionID;
     private bool _isConnected = false;
     private byte _error;
 
-    public delegate void OnMessageReceive(object message);
-    public event OnMessageReceive onMessageReceive;
+    public event Action<string> OnMessageReceive;
 
     public void Connect()
     {
+        if (_username.text == string.Empty) throw new ArgumentNullException("Enter username");
         NetworkTransport.Init();
-        ConnectionConfig cc = new ConnectionConfig();
+        ConnectionConfig cc = new();
         _reliableChannel = cc.AddChannel(QosType.Reliable);
-        HostTopology topology = new HostTopology(cc, MaxConnections);
+        HostTopology topology = new(cc, MaxConnections);
         _hostID = NetworkTransport.AddHost(topology, _port);
         _connectionID = NetworkTransport.Connect(_hostID, "127.0.0.1", _serverPort, 0, out _error);
         if ((NetworkError)_error == NetworkError.Ok)
+        {
             _isConnected = true;
+        }
         else
             Debug.Log((NetworkError)_error);
     }
@@ -56,24 +61,29 @@ public class Client : MonoBehaviour
                 case NetworkEventType.Nothing:
                     break;
                 case NetworkEventType.ConnectEvent:
-                    onMessageReceive?.Invoke($"You have been connected to _server.");
-                    Debug.Log($"You have been connected to _server.");
+                    SendMessage(_username.text);
+                    Debug.Log($"You have been connected to server.");
                     break;
                 case NetworkEventType.DataEvent:
                     string message = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
-                    onMessageReceive?.Invoke(message);
+                    OnMessageReceive?.Invoke(message);
                     Debug.Log(message);
                     break;
                 case NetworkEventType.DisconnectEvent:
                     _isConnected = false;
-                    onMessageReceive?.Invoke($"You have been disconnected from _server.");
-                    Debug.Log($"You have been disconnected from _server.");
+                    Debug.Log($"You have been disconnected from server.");
                     break;
                 case NetworkEventType.BroadcastEvent:
                     break;
             }
-            recData = NetworkTransport.Receive(out recHostId, out connectionId, out channelId, recBuffer,
-            bufferSize, out dataSize, out _error);
+            recData = NetworkTransport.Receive(
+                out recHostId, 
+                out connectionId, 
+                out channelId, 
+                recBuffer,
+                bufferSize, 
+                out dataSize, 
+                out _error);
         }
     }
 

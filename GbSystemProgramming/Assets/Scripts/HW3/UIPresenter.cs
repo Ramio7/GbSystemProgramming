@@ -21,7 +21,7 @@ public class UIPresenter : MonoBehaviour
         _buttonConnectClient.onClick.AddListener(() => Connect());
         _buttonDisconnectClient.onClick.AddListener(() => Disconnect());
         _buttonSendMessage.onClick.AddListener(() => SendMessage());
-        _client.onMessageReceive += ReceiveMessage;
+        _client.OnMessageReceive += ReceiveMessage;
     }
 
     private void StartServer()
