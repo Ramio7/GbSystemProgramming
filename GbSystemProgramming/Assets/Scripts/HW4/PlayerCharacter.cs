@@ -1,31 +1,38 @@
 using UnityEngine;
 
+[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(MouseLook))]
 public class PlayerCharacter : Character
 {
     [Range(0, 100)][SerializeField] private int health = 100;
     [Range(0.5f, 10.0f)][SerializeField] private float movingSpeed = 8.0f;
     [SerializeField] private float acceleration = 3.0f;
     private const float gravity = -9.8f;
-    private CharacterController characterController;
-    private MouseLook mouseLook;
-    private Vector3 currentVelocity;
+    [SerializeField] private CharacterController _characterController;
+    [SerializeField] private MouseLook _mouseLook;
     protected override FireAction FireAction { get; set; }
+
+    private void Start()
+    {
+        Initiate();
+    }
 
     protected override void Initiate()
     {
         base.Initiate();
         FireAction = gameObject.AddComponent<RayShooter>();
         FireAction.Reloading();
-        characterController = characterController != null ? characterController : gameObject.AddComponent<CharacterController>();
-        mouseLook = mouseLook != null ? mouseLook : gameObject.AddComponent<MouseLook>();
+        _characterController = _characterController != null ? _characterController : gameObject.AddComponent<CharacterController>();
+        _mouseLook = _mouseLook != null ? _mouseLook : gameObject.AddComponent<MouseLook>();
     }
 
     public override void Movement()
     {
-        if (mouseLook != null && mouseLook.PlayerCamera != null)
+        if (_mouseLook != null && _mouseLook.PlayerCamera != null)
         {
-            mouseLook.PlayerCamera.enabled = IsOwner;
+            _mouseLook.PlayerCamera.enabled = IsOwner;
         }
+
         if (IsOwner)
         {
             var moveX = Input.GetAxis("Horizontal") * movingSpeed;
@@ -39,19 +46,9 @@ public class PlayerCharacter : Character
             }
             movement.y = gravity;
             movement = transform.TransformDirection(movement);
-            characterController.Move(movement);
-            mouseLook.Rotation();
+            _characterController.Move(movement);
+            _mouseLook.Rotation();
         }
-        //else
-        //{
-        //    transform.position = Vector3.SmoothDamp(transform.position,
-        //    serverPosition, ref currentVelocity, movingSpeed * Time.deltaTime);
-        //}
-    }
-
-    private void Start()
-    {
-        Initiate();
     }
 
     private void OnGUI()
