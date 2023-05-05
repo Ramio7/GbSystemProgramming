@@ -17,9 +17,8 @@ public class Player : NetworkBehaviour
         {
             return;
         }
-        playerCharacter = Instantiate(playerPrefab);
-        var playerNetworkObject = playerCharacter.GetComponent<NetworkObject>();
-        playerNetworkObject.SpawnAsPlayerObject(OwnerClientId, playerCharacter);
+        playerCharacter = Instantiate(playerPrefab, EntryPoint.SpawnPointsManager.GetSpawnPoint());
+        playerCharacter.GetComponent<NetworkObject>().SpawnAsPlayerObject(OwnerClientId, playerCharacter);
     }
 }
 
