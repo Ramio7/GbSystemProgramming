@@ -1284,7 +1284,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 981693340}
-  - component: {fileID: 981693339}
+  - component: {fileID: 981693341}
   m_Layer: 0
   m_Name: EntryPoint
   m_TagString: Untagged
@@ -1292,19 +1292,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &981693339
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 981693338}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a406ee6fb193024e8f1055cb7e7e540, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <LevelView>k__BackingField: {fileID: 2069806465}
 --- !u!4 &981693340
 Transform:
   m_ObjectHideFlags: 0
@@ -1320,6 +1307,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &981693341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981693338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73e48f71522665b4db1136f572995081, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <LevelView>k__BackingField: {fileID: 2069806465}
+  <SpaceShipSettings>k__BackingField: {fileID: 11400000, guid: 8fbf97ac3314e6540928c3aede430063, type: 2}
 --- !u!1 &1061924557
 GameObject:
   m_ObjectHideFlags: 0
