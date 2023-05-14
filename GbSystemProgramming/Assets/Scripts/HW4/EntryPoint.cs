@@ -11,7 +11,7 @@ public class EntryPoint : MonoBehaviour
     public static event Action OnLateUpdate;
     public static event Action OnGui;
 
-    private void Start()
+    protected void Awake()
     {
         SpawnPointsManager = new(LevelView.SpawnPoints);
     }

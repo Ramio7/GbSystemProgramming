@@ -10,6 +10,10 @@ public class ShipController : NetworkBehaviour
     private float _shipSpeed;
     private Rigidbody _rb;
     private string _playerName;
+    private SpaceShipSettings _spaceShipSettings;
+    private bool _isFaster;
+    private float _currentFov;
+
     public string PlayerName
     {
         get => _playerName;
@@ -18,6 +22,8 @@ public class ShipController : NetworkBehaviour
 
     private void Start()
     {
+        OnStartAuthority();
+        EntryPoint.OnFixedUpdate += HasAuthorityMovement;
         EntryPoint.OnLateUpdate += _cameraInput.CameraMovement;
     }
 
@@ -30,38 +36,38 @@ public class ShipController : NetworkBehaviour
         _cameraInput.ShowPlayerLabels(_playerLabel);
     }
 
-    public void OnStartAuthority()
+    private void OnStartAuthority()
     {
-        if (!TryGetComponent(out _rb))
-        {
-            return;
-        }
+        if (!TryGetComponent(out _rb)) return;
+
+        _spaceShipSettings = HW5EntryPoint.ShipSettings;
+        _currentFov = _spaceShipSettings.NormalFov;
+
         gameObject.name = _playerName;
         _cameraInput = FindObjectOfType<CameraInput>();
         _cameraInput.Initiate(_cameraAttach == null ? transform : _cameraAttach);
         _playerLabel = GetComponentInChildren<PlayerLabel>();
     }
 
-    protected  void HasAuthorityMovement()
+    private void HasAuthorityMovement()
     {
-        var spaceShipSettings = HW5EntryPoint.SpaceShipSettings;
-        if (spaceShipSettings == null)
+        if (_spaceShipSettings == null) return;
+
+        if (Input.GetKey(KeyCode.LeftShift).CompareTo(_isFaster) == 0)
         {
-            return;
+            var faster = _isFaster ? _spaceShipSettings.Faster : 1.0f;
+            _shipSpeed = Mathf.Lerp(_shipSpeed, _spaceShipSettings.ShipSpeed * faster, _spaceShipSettings.Acceleration);
+            _currentFov = _isFaster ? _spaceShipSettings.FasterFov : _spaceShipSettings.NormalFov;
         }
-        var isFaster = Input.GetKey(KeyCode.LeftShift);
-        var speed = spaceShipSettings.ShipSpeed;
-        var faster = isFaster ? spaceShipSettings.Faster : 1.0f;
-        _shipSpeed = Mathf.Lerp(_shipSpeed, speed * faster, spaceShipSettings.Acceleration);
-        var currentFov = isFaster ? spaceShipSettings.FasterFov : spaceShipSettings.NormalFov;
-        _cameraInput.SetFov(currentFov, spaceShipSettings.ChangeFovSpeed);
-        var velocity = _cameraInput.transform.TransformDirection(Vector3.forward) * _shipSpeed;
-        _rb.velocity = velocity * Time.deltaTime;
+        
+        _cameraInput.SetFov(_currentFov, _spaceShipSettings.ChangeFovSpeed);
+        _rb.velocity = _cameraInput.transform.TransformDirection(Vector3.forward) * _shipSpeed;
         if (!Input.GetKey(KeyCode.C))
         {
-            var targetRotation = Quaternion.LookRotation(Quaternion.AngleAxis(_cameraInput.LookAngle, -transform.right) * velocity);
+            var targetRotation = Quaternion.LookRotation(Quaternion.AngleAxis(_cameraInput.LookAngle, -transform.right) *
+                _cameraInput.transform.TransformDirection(Vector3.forward) * _shipSpeed);
             transform.rotation = Quaternion.Slerp(transform.rotation,
-            targetRotation, Time.deltaTime * speed);
+            targetRotation, Time.deltaTime * _spaceShipSettings.ShipSpeed);
         }
     }
 }
