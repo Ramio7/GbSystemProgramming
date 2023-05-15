@@ -13,6 +13,7 @@ public class NetworkUIPresenter : MonoBehaviour
     private void Start()
     {
         SubscribeButtons();
+        SetButtonsActivity(false);
     }
 
     private void OnDestroy()
