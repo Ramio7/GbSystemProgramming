@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class ShipController : NetworkBehaviour
 {
-
-    [SerializeField] private Transform _cameraAttach;
+    [SerializeField] private Camera _cameraAttach;
     private CameraInput _cameraInput;
     private PlayerLabel _playerLabel;
     private float _shipSpeed;
@@ -44,9 +43,9 @@ public class ShipController : NetworkBehaviour
         _currentFov = _spaceShipSettings.NormalFov;
 
         gameObject.name = _playerName;
-        _cameraInput = FindObjectOfType<CameraInput>();
-        _cameraInput.Initiate(_cameraAttach == null ? transform : _cameraAttach);
-        _playerLabel = GetComponentInChildren<PlayerLabel>();
+        _cameraInput = GetComponent<CameraInput>();
+        _cameraInput.Initiate(_cameraAttach == null ? Camera.main : _cameraAttach);
+        _playerLabel = GetComponent<PlayerLabel>();
     }
 
     private void HasAuthorityMovement()
@@ -61,7 +60,7 @@ public class ShipController : NetworkBehaviour
         }
         
         _cameraInput.SetFov(_currentFov, _spaceShipSettings.ChangeFovSpeed);
-        _rb.velocity = _cameraInput.transform.TransformDirection(Vector3.forward) * _shipSpeed;
+        _rb.velocity = _cameraInput.transform.TransformDirection(Vector3.forward) * _shipSpeed * Time.deltaTime;
         if (!Input.GetKey(KeyCode.C))
         {
             var targetRotation = Quaternion.LookRotation(Quaternion.AngleAxis(_cameraInput.LookAngle, -transform.right) *

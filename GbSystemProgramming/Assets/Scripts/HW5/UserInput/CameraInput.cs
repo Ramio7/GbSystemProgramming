@@ -32,13 +32,13 @@ public class CameraInput : MonoBehaviour
     public Vector3 LookPosition { get; private set; }
     public int LookAngle => _lookAngle;
 
-    public void Initiate(Transform cameraAttach)
+    public void Initiate(Camera cameraAttach)
     {
-        _focus = cameraAttach;
-        transform.parent = null;
+        _focus = cameraAttach.transform;
+        //transform.parent = null;
         _desiredDistance = _distance;
         _currentDistance = _distance;
-        _regularCamera = GetComponent<Camera>();
+        _regularCamera = cameraAttach;
         _focusPoint = _focus.position;
         transform.localRotation = ConstrainAngles(ref _orbitAngles);
     }
