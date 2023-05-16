@@ -1,4 +1,6 @@
+using TMPro;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,12 +10,14 @@ public class NetworkUIPresenter : MonoBehaviour
     [field: SerializeField] public Button StartClientButton { get; private set; }
     [field: SerializeField] public Button StartHostButton { get; private set; }
     [field: SerializeField] public Button ShutdownButton { get; private set; }
+    [field: SerializeField] public TMP_Text PlayerNameField { get; private set; }
     [field: SerializeField] public NetworkManager NetworkManager { get; private set; }
 
     private void Start()
     {
         SubscribeButtons();
         SetButtonsActivity(false);
+        NetworkManager.GetPrefabDefinition().name = PlayerNameField.text;
     }
 
     private void OnDestroy()
@@ -66,6 +70,7 @@ public class NetworkUIPresenter : MonoBehaviour
         StartServerButton.gameObject.SetActive(!instanceActivityFlag);
         StartClientButton.gameObject.SetActive(!instanceActivityFlag);
         StartHostButton.gameObject.SetActive(!instanceActivityFlag);
+        PlayerNameField.gameObject.SetActive(!instanceActivityFlag);
         ShutdownButton.gameObject.SetActive(instanceActivityFlag);
     }
 }
