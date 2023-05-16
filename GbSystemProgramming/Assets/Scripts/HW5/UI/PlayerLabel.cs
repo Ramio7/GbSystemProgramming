@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerLabel : MonoBehaviour
@@ -10,13 +12,17 @@ public class PlayerLabel : MonoBehaviour
         var style = new GUIStyle();
         style.normal.background = Texture2D.redTexture;
         style.normal.textColor = Color.blue;
-        var objects = FindObjectsOfType<ShipController>();
-        for (int i = 0; i < objects.Length; i++)
+
+        var players = NetworkManager.Singleton.ConnectedClients;
+        List<NetworkObject> objects = new();
+        foreach (var p in players) objects.Add(p.Value.PlayerObject);
+
+        for (int i = 0; i < objects.Count; i++)
         {
             var obj = objects.ElementAt(i);
             var position = camera.WorldToScreenPoint(obj.transform.position);
-            var collider = obj.GetComponent<Collider>();
-            if (collider != null && obj.transform != transform)
+            var controller = obj.GetComponentInChildren<ShipController>();
+            if (controller != null && obj.transform != transform)
             {
                 GUI.Label(new Rect(new Vector2(position.x, Screen.height -
                 position.y), new Vector2(10, name.Length * 10.5f)),

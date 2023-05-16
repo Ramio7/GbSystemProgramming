@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SpaceShipSettings
   m_EditorClassIdentifier: 
   <Acceleration>k__BackingField: 0.01
-  <ShipSpeed>k__BackingField: 5
+  <ShipSpeed>k__BackingField: 1
   <Faster>k__BackingField: 2
   <NormalFov>k__BackingField: 60
   <FasterFov>k__BackingField: 30

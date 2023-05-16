@@ -1380,8 +1380,7 @@ MonoBehaviour:
   <StartClientButton>k__BackingField: {fileID: 445108787}
   <StartHostButton>k__BackingField: {fileID: 79060684}
   <ShutdownButton>k__BackingField: {fileID: 360312154}
-  <PlayerNameField>k__BackingField: {fileID: 1233430238}
-  <NetworkManager>k__BackingField: {fileID: 1228435526}
+  <PlayerNameField>k__BackingField: {fileID: 1973582789}
 --- !u!1 &662650138
 GameObject:
   m_ObjectHideFlags: 0
@@ -2352,6 +2351,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <LevelView>k__BackingField: {fileID: 2069806465}
   <SpaceShipSettings>k__BackingField: {fileID: 11400000, guid: 8fbf97ac3314e6540928c3aede430063, type: 2}
+  <SpaceNetworkManager>k__BackingField: {fileID: 1228435529}
 --- !u!1 &1061924557
 GameObject:
   m_ObjectHideFlags: 0
@@ -2843,8 +2843,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1228435527}
-  - component: {fileID: 1228435526}
   - component: {fileID: 1228435528}
+  - component: {fileID: 1228435529}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -2852,45 +2852,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1228435526
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1228435525}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 593a2fe42fa9d37498c96f9a383b6521, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RunInBackground: 1
-  LogLevel: 1
-  NetworkConfig:
-    ProtocolVersion: 0
-    NetworkTransport: {fileID: 1228435528}
-    PlayerPrefab: {fileID: 4017597111022020015, guid: 6e275d68fd0c48f4eb7c57d8c5f02656, type: 3}
-    NetworkPrefabs:
-    - Override: 0
-      Prefab: {fileID: 6453702385095615084, guid: 266462226b0520a4db832cc262b203c5, type: 3}
-      SourcePrefabToOverride: {fileID: 0}
-      SourceHashToOverride: 0
-      OverridingTargetPrefab: {fileID: 0}
-    TickRate: 30
-    ClientConnectionBufferTimeout: 10
-    ConnectionApproval: 0
-    ConnectionData: 
-    EnableTimeResync: 0
-    TimeResyncInterval: 30
-    EnsureNetworkVariableLengthSafety: 0
-    EnableSceneManagement: 0
-    ForceSamePrefabs: 0
-    RecycleNetworkIds: 1
-    NetworkIdRecycleDelay: 120
-    RpcHashSize: 0
-    LoadSceneTimeOut: 120
-    SpawnTimeout: 1
-    EnableNetworkLogs: 1
 --- !u!4 &1228435527
 Transform:
   m_ObjectHideFlags: 0
@@ -2934,6 +2895,46 @@ MonoBehaviour:
     PacketDelayMS: 0
     PacketJitterMS: 0
     PacketDropRate: 0
+--- !u!114 &1228435529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228435525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eebe8668455ad7e4689c013369e65f4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RunInBackground: 1
+  LogLevel: 1
+  NetworkConfig:
+    ProtocolVersion: 0
+    NetworkTransport: {fileID: 1228435528}
+    PlayerPrefab: {fileID: 4017597111022020015, guid: 6e275d68fd0c48f4eb7c57d8c5f02656, type: 3}
+    NetworkPrefabs:
+    - Override: 0
+      Prefab: {fileID: 6453702385095615084, guid: 266462226b0520a4db832cc262b203c5, type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
+    TickRate: 30
+    ClientConnectionBufferTimeout: 10
+    ConnectionApproval: 0
+    ConnectionData: 
+    EnableTimeResync: 0
+    TimeResyncInterval: 30
+    EnsureNetworkVariableLengthSafety: 0
+    EnableSceneManagement: 1
+    ForceSamePrefabs: 1
+    RecycleNetworkIds: 1
+    NetworkIdRecycleDelay: 120
+    RpcHashSize: 0
+    LoadSceneTimeOut: 120
+    SpawnTimeout: 1
+    EnableNetworkLogs: 1
+  playerName: 
 --- !u!1 &1233430236
 GameObject:
   m_ObjectHideFlags: 0
@@ -3731,7 +3732,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1521046711}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -89.47, y: 8.63, z: -84.97}
+  m_LocalPosition: {x: -278.34, y: 61.081, z: -85.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

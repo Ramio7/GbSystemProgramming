@@ -3,21 +3,21 @@ using UnityEngine;
 
 public class Player : NetworkBehaviour
 {
-    [SerializeField] private GameObject playerPrefab;
-    private GameObject playerCharacter;
+    [SerializeField] private GameObject _playerPrefab;
+    protected GameObject playerCharacter;
 
     private void Start()
     {
         SpawnCharacter();
     }
 
-    private void SpawnCharacter()
+    protected virtual void SpawnCharacter()
     {
         if (!IsServer)
         {
             return;
         }
-        playerCharacter = Instantiate(playerPrefab, EntryPoint.SpawnPointsManager.GetSpawnPoint().position, Quaternion.identity, transform);
+        playerCharacter = Instantiate(_playerPrefab, EntryPoint.SpawnPointsManager.GetSpawnPoint().position, Quaternion.identity, transform);
         playerCharacter.GetComponent<NetworkObject>().SpawnAsPlayerObject(OwnerClientId, playerCharacter);
     }
 }

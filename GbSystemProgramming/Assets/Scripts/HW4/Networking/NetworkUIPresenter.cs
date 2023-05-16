@@ -1,6 +1,4 @@
 using TMPro;
-using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,14 +8,12 @@ public class NetworkUIPresenter : MonoBehaviour
     [field: SerializeField] public Button StartClientButton { get; private set; }
     [field: SerializeField] public Button StartHostButton { get; private set; }
     [field: SerializeField] public Button ShutdownButton { get; private set; }
-    [field: SerializeField] public TMP_Text PlayerNameField { get; private set; }
-    [field: SerializeField] public NetworkManager NetworkManager { get; private set; }
+    [field: SerializeField] public TMP_InputField PlayerNameField { get; private set; }
 
     private void Start()
     {
         SubscribeButtons();
         SetButtonsActivity(false);
-        NetworkManager.GetPrefabDefinition().name = PlayerNameField.text;
     }
 
     private void OnDestroy()
@@ -43,26 +39,29 @@ public class NetworkUIPresenter : MonoBehaviour
 
     private void StartServer()
     {
-        NetworkManager.StartServer();
+        HW5EntryPoint.NetworkManager.StartServer();
         SetButtonsActivity(true);
     }
 
     private void StartClient()
     {
-        NetworkManager.StartClient();
+        HW5EntryPoint.NetworkManager.StartClient();
         SetButtonsActivity(true);
+        HW5EntryPoint.NetworkManager.playerName = PlayerNameField.text;
     }
 
     private void StartHost()
     {
-        NetworkManager.StartHost();
+        HW5EntryPoint.NetworkManager.StartHost();
         SetButtonsActivity(true);
+        HW5EntryPoint.NetworkManager.playerName = PlayerNameField.text;
     }
 
     private void ShutDown()
     {
-        NetworkManager.Shutdown();
+        HW5EntryPoint.NetworkManager.Shutdown();
         SetButtonsActivity(false);
+        HW5EntryPoint.NetworkManager.playerName = null;
     }
 
     private void SetButtonsActivity(bool instanceActivityFlag)
