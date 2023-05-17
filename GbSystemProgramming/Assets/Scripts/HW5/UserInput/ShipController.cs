@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -44,6 +45,26 @@ public class ShipController : NetworkBehaviour
         _cameraInput.ShowPlayerLabels(_playerLabel);
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        RespawnPlayerServerRpc();
+    }
+
+    [ServerRpc]
+    private void RespawnPlayerServerRpc()
+    {
+        gameObject.SetActive(false);
+        WaitInSeconds(5);
+        var spawnPoint = EntryPoint.SpawnPointsManager.GetSpawnPoint();
+        gameObject.transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
+        gameObject.SetActive(true);
+    }
+
+    private async void WaitInSeconds(float seconds)
+    {
+        await Task.Delay((int)(seconds * 1000));
+    }
+
     private void SubscribeUpdates()
     {
         EntryPoint.OnFixedUpdate += HasAuthorityMovement;
@@ -83,7 +104,8 @@ public class ShipController : NetworkBehaviour
         _currentFov = _isFaster ? _spaceShipSettings.FasterFov : _spaceShipSettings.NormalFov;
 
         _cameraInput.SetFov(_currentFov, _spaceShipSettings.ChangeFovSpeed);
-        _rb.velocity = _shipSpeed * Time.deltaTime * _cameraInput.transform.TransformDirection(Vector3.forward);
+        _rb.AddForce(_shipSpeed * Time.deltaTime * _cameraInput.transform.TransformDirection(Vector3.forward), ForceMode.VelocityChange);
+
         if (!Input.GetKey(KeyCode.C))
         {
             var targetRotation = Quaternion.LookRotation(Quaternion.AngleAxis(_cameraInput.LookAngle, -transform.right) *
@@ -91,5 +113,7 @@ public class ShipController : NetworkBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation,
             targetRotation, Time.deltaTime * _spaceShipSettings.ShipSpeed);
         }
+
+        Debug.Log($"{_rb.velocity} {transform.position}");
     }
 }
