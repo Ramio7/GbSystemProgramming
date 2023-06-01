@@ -6,7 +6,7 @@ using UnityEngine;
 public class Fractal : MonoBehaviour
 {
     [BurstCompile(CompileSynchronously = true)]
-    private struct UpdateFractalLevelJob : IJobFor
+    private struct UpdateFractalLevelJob : IJobParallelFor
     {
         public float SpinAngleDelta;
         public float Scale;
@@ -156,7 +156,7 @@ public class Fractal : MonoBehaviour
                 Parents = _parts[li - 1],
                 Parts = _parts[li],
                 Matrices = _matrices[li]
-            }.Schedule(_parts[li].Length, jobHandle);
+            }.Schedule(_parts[li].Length, _parts.Length, jobHandle);
         }
         jobHandle.Complete();
 
