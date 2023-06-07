@@ -18,9 +18,11 @@ public class StarEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
+        EditorGUILayout.BeginVertical();
         EditorGUILayout.PropertyField(_center);
         EditorGUILayout.PropertyField(_points);
         EditorGUILayout.IntSlider(_frequency, 1, 20);
+        EditorGUILayout.EndVertical();
         var totalPoints = _frequency.intValue * _points.arraySize;
         if (totalPoints < 3)
         {
@@ -32,7 +34,6 @@ public class StarEditor : Editor
             EditorGUILayout.HelpBox(totalPoints + " points in total.",
             MessageType.Info);
         }
-        serializedObject.ApplyModifiedProperties();
 
         if (!serializedObject.ApplyModifiedProperties() &&
         (Event.current.type != EventType.ExecuteCommand ||
@@ -40,6 +41,8 @@ public class StarEditor : Editor
         {
             return;
         }
+
+        serializedObject.ApplyModifiedProperties();
 
         foreach (var obj in targets)
         {
@@ -57,7 +60,7 @@ public class StarEditor : Editor
             return;
         }
         var starTransform = star.transform;
-        var angle = -360f / (star.Frequency * star.Points.Length);
+        var angle = -360f / (_frequency.intValue * star.Points.Length);
         for (var i = 0; i < star.Points.Length; i++)
         {
             var rotation = Quaternion.Euler(0f, 0f, angle * i);

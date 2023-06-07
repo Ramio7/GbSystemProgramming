@@ -14,7 +14,6 @@ public class Star : MonoBehaviour
     private int[] _triangles;
 
     public ColorPoint[] Points { get { return _points; } }
-    public int Frequency { get { return _frequency; } }
 
     private void OnEnable()
     {
@@ -53,8 +52,7 @@ public class Star : MonoBehaviour
             {
                 for (var p = 0; p < _points.Length; p++, v++, t += 3)
                 {
-                    _vertices[v] = Quaternion.Euler(0f, 0f, angle * (v - 1)) *
-                    _points[p].Position;
+                    _vertices[v] = Quaternion.Euler(0f, 0f, angle * (v - 1)) * _points[p].Position;
                     _colors[v] = _points[p].Color;
                     _triangles[t] = v;
                     _triangles[t + 1] = v + 1;
