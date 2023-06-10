@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ac3530996060cd41a22adba5b1f5394, type: 3}
   m_Name: SpaceShipSettings
   m_EditorClassIdentifier: 
-  <Acceleration>k__BackingField: 0.028
-  <ShipSpeed>k__BackingField: 662
+  <Acceleration>k__BackingField: 0.01
+  <ShipSpeed>k__BackingField: 11
   <Faster>k__BackingField: 2
   <NormalFov>k__BackingField: 60
   <FasterFov>k__BackingField: 30

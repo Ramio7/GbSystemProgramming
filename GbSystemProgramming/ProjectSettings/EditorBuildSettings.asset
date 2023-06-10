@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/HW5.unity
+    path: Assets/Scenes/Coursework.unity
     guid: 44cccf0c6880d884192f2c5b6b37ce6d
   m_configObjects: {}
