@@ -7,13 +7,15 @@ public class LevelView : MonoBehaviour
     [SerializeField] private GameObject _starPrefab;
     [SerializeField] private List<Vector3> _spawnPoints;
     [SerializeField] private List<Planet> _planetsPrefabs;
+    [SerializeField] private int _planetSatelitesInPlanetPrefabs;
 
     public GameObject StarPrefab { get => _starPrefab; set => _starPrefab = value; }
     public List<Vector3> SpawnPoints { get => _spawnPoints; private set => _spawnPoints = value; }
     public List<Planet> PlanetsPrefabs { get => _planetsPrefabs; set => _planetsPrefabs = value; }
+    public int PlanetSatelitesInPlanetPrefabs { get => _planetSatelitesInPlanetPrefabs; set => _planetSatelitesInPlanetPrefabs = value; }
 
     [ServerRpc]
-    private void OnEnable()
+    private void Awake()
     {
         var star = Instantiate(StarPrefab, transform);
         foreach (var planet in _planetsPrefabs)
