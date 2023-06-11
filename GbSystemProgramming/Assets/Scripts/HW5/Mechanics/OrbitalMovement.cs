@@ -14,10 +14,12 @@ public class OrbitalMovement : NetworkBehaviour
     private float _currentRotationAngle;
     private const float _circleRadians = Mathf.PI * 2;
 
+    public Transform AroundPoint { get => _aroundPoint; set => _aroundPoint = value; }
+
     private void Start()
     {
         
-        _dist = (transform.position - _aroundPoint.position).magnitude;
+        _dist = (transform.position - AroundPoint.position).magnitude;
         EntryPoint.OnFixedUpdate += Move;
     }
 
@@ -25,7 +27,7 @@ public class OrbitalMovement : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        var p = _aroundPoint.position;
+        var p = AroundPoint.position;
         p.x += Mathf.Sin(_currentAng) * _dist * _offsetSin;
         p.z += Mathf.Cos(_currentAng) * _dist * _offsetCos;
         transform.position = p;

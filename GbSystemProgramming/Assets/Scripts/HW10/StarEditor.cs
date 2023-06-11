@@ -59,6 +59,7 @@ public class StarEditor : Editor
         {
             return;
         }
+
         var starTransform = star.transform;
         var angle = -360f / (_frequency.intValue * star.Points.Length);
         for (var i = 0; i < star.Points.Length; i++)

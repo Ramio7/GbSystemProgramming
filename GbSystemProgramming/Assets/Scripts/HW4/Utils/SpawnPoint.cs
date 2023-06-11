@@ -1,19 +1,13 @@
-using System;
 using UnityEngine;
 
-public class SpawnPoint: IDisposable
+public class SpawnPoint
 {
-    [field: SerializeField] public Transform SpawnPointTransform { get; private set; }
+    [field: SerializeField] public Vector3 SpawnPointPosition { get; private set; }
     [field: SerializeField] public bool SpawnPointUsed { get; set; }
 
-    public SpawnPoint(Transform transform)
+    public SpawnPoint(Vector3 position)
     {
-        SpawnPointTransform = transform;
+        SpawnPointPosition = position;
         SpawnPointUsed = false;
-    }
-
-    public void Dispose()
-    {
-        SpawnPointTransform = null;
     }
 }

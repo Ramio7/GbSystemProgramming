@@ -7,9 +7,9 @@ public class SpawnPointsManager: IDisposable
 {
     private readonly List<SpawnPoint> _spawnPoints = new();
 
-    public SpawnPointsManager(List<Transform> spawnPoints) 
+    public SpawnPointsManager(List<Vector3> spawnPoints) 
     {
-        foreach (Transform t in spawnPoints)
+        foreach (Vector3 t in spawnPoints)
         {
             _spawnPoints.Add(new(t));
         }
@@ -17,21 +17,17 @@ public class SpawnPointsManager: IDisposable
 
     public void Dispose()
     {
-        foreach (SpawnPoint p in _spawnPoints) 
-        { 
-            p.Dispose(); 
-        }
         _spawnPoints.Clear();
     }
 
-    public Transform GetSpawnPoint()
+    public Vector3 GetSpawnPoint()
     {
         var freeSpawnPoints = GetFreeSpawnPoints();
 
         var spawnPointIndex = Random.Range(0, freeSpawnPoints.Count);
         freeSpawnPoints[spawnPointIndex].SpawnPointUsed = true;
 
-        return freeSpawnPoints[spawnPointIndex].SpawnPointTransform;
+        return freeSpawnPoints[spawnPointIndex].SpawnPointPosition;
     }
 
     private List<SpawnPoint> GetFreeSpawnPoints()

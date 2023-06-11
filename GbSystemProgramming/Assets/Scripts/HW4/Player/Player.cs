@@ -17,7 +17,7 @@ public class Player : NetworkBehaviour
         {
             return;
         }
-        playerCharacter = Instantiate(_playerPrefab, EntryPoint.SpawnPointsManager.GetSpawnPoint().position, Quaternion.identity, transform);
+        playerCharacter = Instantiate(_playerPrefab, EntryPoint.SpawnPointsManager.GetSpawnPoint(), Quaternion.identity, transform);
         playerCharacter.GetComponent<NetworkObject>().SpawnAsPlayerObject(OwnerClientId, playerCharacter);
     }
 }

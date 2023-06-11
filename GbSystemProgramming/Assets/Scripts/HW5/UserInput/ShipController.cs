@@ -56,7 +56,7 @@ public class ShipController : NetworkBehaviour
         gameObject.SetActive(false);
         WaitInSeconds(5);
         var spawnPoint = EntryPoint.SpawnPointsManager.GetSpawnPoint();
-        gameObject.transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
+        gameObject.transform.SetPositionAndRotation(spawnPoint, Quaternion.identity);
         gameObject.SetActive(true);
     }
 
